@@ -7,7 +7,7 @@ Normalement une machine virtuel est déjà disponible. Si ce n'est pas le cas cr
     `source venv/bin/activate`
 
 Installer les dépendences avec la commande
-    `pip install -r requirement.txt`
+    `pip install -r server/requirements.txt`
 
 ### Creer la base de données
 Une base de données est déjà disponible répertoire. Si ce n'est pas le cas créez un fichier **questionnaire.db** puis populez la base de données avec la commande
