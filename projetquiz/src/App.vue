@@ -1,12 +1,9 @@
 <script>
-import TodoItem from './components/TodoItem.vue';
+import QuestionnaireItem from './components/QuestionnaireItem.vue';
 
 let data = {
-  todos: [
-    { id:0, text: 'Faire les courses', checked: true },
-    { id:1, text: 'Apprendre REST', checked: false }
-  ],
-  title: 'Mes tâches',
+  questionnaires: [],
+  title: 'Mes questionnaires',
   newItem: ''
 };
 
@@ -18,8 +15,8 @@ export default {
     addItem: function () {
       let text = this.newItem.trim();
       if (text) {
-        this.todos.push({
-          id: this.todos.length,
+        this.questionnaires.push({
+          id: this.questionnaires.length,
           text: text,
           checked: false
         });
@@ -28,29 +25,29 @@ export default {
     },
     removeItem: function ($event) {
 
-      for (let i = 0; i < this.todos.length; i++) {
-        if ($event.id == this.todos[i].id) {
-          this.todos.splice(i, 1);
+      for (let i = 0; i < this.questionnaires.length; i++) {
+        if ($event.id == this.questionnaires[i].id) {
+          this.questionnaires.splice(i, 1);
           break;
         }
       }
     },
     updateItem: function($event){
-      for (let i = 0; i < this.todos.length; i++) {
-        if ($event.id == this.todos[i].id) {
-          this.todos[i].text = $event.text;
+      for (let i = 0; i < this.questionnaires.length; i++) {
+        if ($event.id == this.questionnaires[i].id) {
+          this.questionnaires[i].text = $event.text;
           break;}
     }}
   },
   mounted() {
-    fetch('http://127.0.0.1:5000/todo/api/v1.0/tasks')
+    fetch('http://127.0.0.1:5000/quiz/api/v1.0/questionnaires')
       .then(response => response.json())
       .then(data => {
-        this.todos = data.tasks;
+        this.questionnaires = data;
       });
   },
   components: {
-    TodoItem
+    QuestionnaireItem
   }
 };
 </script>
@@ -65,9 +62,9 @@ export default {
   <div class="container">
     <h2>{{ title }}</h2>
     <ol>
-      <TodoItem
-      v-for="todo in todos"
-      :todo="todo"
+      <QuestionnaireItem
+      v-for="questionnaire in questionnaires"
+      :questionnaire="questionnaire"
       @remove="removeItem"
       @update="updateItem"
       />
