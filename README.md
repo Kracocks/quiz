@@ -3,11 +3,11 @@
 
 ### Lancer la machine virtuel
 Normalement une machine virtuel est déjà disponible. Si ce n'est pas le cas créez la avec la commande 
-    `virtualenv -p python3 venv` ensuite installez les dépendences avec la commande
-    `pip install -r requirement.txt`
-
-Lancer la machine virtuel python avec la commande
+    `virtualenv -p python3 venv` ensuite lancez la machine virtuel python avec la commande
     `source venv/bin/activate`
+
+Installer les dépendences avec la commande
+    `pip install -r requirement.txt`
 
 ### Creer la base de données
 Une base de données est déjà disponible répertoire. Si ce n'est pas le cas créez un fichier **questionnaire.db** puis populez la base de données avec la commande
