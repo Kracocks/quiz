@@ -9,6 +9,7 @@ print(OpenQuestion.__table__)
 @app.cli.command()
 def loaddb():
     '''Creates the tables and populates them with data'''
+    db.drop_all()
     
     #Création de toute les tables
     db.create_all()
