@@ -13,12 +13,11 @@ export default {
   },
   methods: {
     addItem: function () {
-      let text = this.newItem.trim();
-      if (text) {
+      let name = this.newItem.trim();
+      if (name) {
         this.questionnaires.push({
           id: this.questionnaires.length,
-          text: text,
-          checked: false
+          name: name
         });
         this.newItem = '';
       }
@@ -37,14 +36,17 @@ export default {
         if ($event.id == this.questionnaires[i].id) {
           this.questionnaires[i].text = $event.text;
           break;}
-    }}
-  },
-  mounted() {
-    fetch('http://127.0.0.1:5000/quiz/api/v1.0/questionnaires')
+    }},
+    refreshItem: function() {
+      fetch('http://127.0.0.1:5000/quiz/api/v1.0/questionnaires')
       .then(response => response.json())
       .then(data => {
         this.questionnaires = data;
       });
+    }
+  },
+  mounted() {
+    this.refreshItem()
   },
   components: {
     QuestionnaireItem
