@@ -5,7 +5,7 @@ export default {
   },
   data() {
     return {
-      isEditing: false
+      	isEditing: false
     };
   },
   methods: {
@@ -13,9 +13,8 @@ export default {
         
     },
     suppr: function () {
-        url = this.question.url;
         fetch(
-            url,
+            this.question.uri,
             {
                 headers: {
                     'Accept': 'application/json',
@@ -31,7 +30,7 @@ export default {
     },
     valid: function () {
         fetch(
-            uri, 
+            this.question.uri, 
             {
                 headers: {
                     'Accept': 'application/json',
@@ -39,10 +38,10 @@ export default {
                 },
                 method: "PUT",
                 body: JSON.stringify({
-                    "titre": "titre",
-					"proposition1": "true",
-					"proposition2": "false",
-                    "reponse": "true"
+                    "titre": this.question.titre,
+					"proposition1": this.question.proposition1,
+					"proposition2": this.question.proposition2,
+                    "reponse": this.question.reponse
                 })
             })
         .then(() => { console.log('Save Success') ;
@@ -60,13 +59,21 @@ export default {
 </script>
 
 <template>
-  <li v-bind:class="{ 'alert alert-success': todo.checked }">
-    <div class="checkbox">
-      <label v-if="!isEditing">
-        <input type="checkbox" v-model="todo.checked">
-        {{ todo.text }}
-      </label>
-      <input v-if="isEditing" v-model="todo.text" class="form-control">
+  <li>
+    <div class="formModifierQuestion" v-if="isEditing">
+		<label>
+			<input type="text" v-model="question.titre">
+
+		</label>
+		<input type="radio" id="reponse1" name="reponse" :checked="question.reponse === question.proposition1" />
+		<label for="reponse1">
+			<input type="text" v-model="question.proposition1">
+		</label>
+
+		<input type="radio" id="reponse2" name="reponse" :checked="question.reponse === question.proposition2" />
+		<label for="reponse2">
+			<input type="text" v-model="question.proposition2">
+		</label>
     </div>
 
     <input
@@ -85,7 +92,7 @@ export default {
     <input
       v-if="isEditing"
       type="button"
-      class="btn btn-"
+      class="btn btn-valid"
       value="Valider"
       @click="valid"
     >
