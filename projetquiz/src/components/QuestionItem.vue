@@ -24,7 +24,7 @@ export default {
             })
         .then(res => { 
 			console.log('Delete Success:' + res); 
-			this.$emit('remove', { return: res });
+			this.$emit('refresh', { return: res });
 		} )
         .catch( res => { console.log(res);  });
     },
@@ -39,13 +39,13 @@ export default {
                 method: "PUT",
                 body: JSON.stringify({
                     "titre": this.question.titre,
-					"proposition1": this.question.proposition1,
-					"proposition2": this.question.proposition2,
+                    "proposition1": this.question.proposition1,
+                    "proposition2": this.question.proposition2,
                     "reponse": this.question.reponse
                 })
             })
-        .then(() => { console.log('Save Success') ;
-            this.$emit('update', { return: res });
+        .then(res => { console.log('Save Success') ;
+            this.$emit('refresh', { return: res });
             this.isEditing = false;
         })
         .catch( res => { console.log(res) });
@@ -54,26 +54,26 @@ export default {
         this.isEditing = true;
     }
   },
-  emits: ['remove', 'update']
+  emits: ['refresh']
 };
 </script>
 
 <template>
   <li>
     <div class="formModifierQuestion" v-if="isEditing">
-		<label>
-			<input type="text" v-model="question.titre">
+      <label>
+        <input type="text" v-model="question.titre">
+      </label>
 
-		</label>
-		<input type="radio" id="reponse1" name="reponse" :checked="question.reponse === question.proposition1" />
-		<label for="reponse1">
-			<input type="text" v-model="question.proposition1">
-		</label>
+      <input type="radio" id="reponse1" name="reponse" :value="true" v-model="question.reponse" />
+      <label for="reponse1">
+        <input type="text" v-model="question.proposition1">
+      </label>
 
-		<input type="radio" id="reponse2" name="reponse" :checked="question.reponse === question.proposition2" />
-		<label for="reponse2">
-			<input type="text" v-model="question.proposition2">
-		</label>
+      <input type="radio" id="reponse2" name="reponse" :value="false" v-model="question.reponse" />
+      <label for="reponse2">
+        <input type="text" v-model="question.proposition2">
+      </label>
     </div>
 
     <input
