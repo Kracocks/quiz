@@ -1,10 +1,11 @@
 <script>
 import QuestionnaireItem from './components/QuestionnaireItem.vue';
+import FormQuestionnaire from './components/formQuestionnaire.vue';
 
 let data = {
-  questionnaires: [],
+  questionnaires: {},
   title: 'Mes questionnaires',
-  newItem: ''
+  newItem: '',
 };
 
 export default {
@@ -13,44 +14,52 @@ export default {
   },
   methods: {
     addItem: function () {
-      let name = this.newItem.trim();
-      if (name) {
-        this.questionnaires.push({
-          id: this.questionnaires.length,
-          name: name
-        });
-        this.newItem = '';
-      }
+      this.refreshItem();
     },
-    removeItem: function ($event) {
-      for (let i = 0; i < this.questionnaires.length; i++) {
-        if ($event.id == this.questionnaires[i].id) {
-          this.questionnaires.splice(i, 1);
-          break;
-        }
-      }
+
+    removeQuestionnaire: function ($event) {
+      fetch(
+        $event.uri,
+        {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          method: "DELETE"
+        })
+      .then(response => { console.log('Delete Success:' + response); } )
+      .then(() => this.refreshItem())
+      .catch( response => { console.log(response);  });
     },
-    updateItem: function ($event) {
-      for (let i = 0; i < this.questionnaires.length; i++) {
-        if ($event.id == this.questionnaires[i].id) {
-          this.questionnaires[i].text = $event.text;
-          break;
-        }
-      }
+    updateQuestionnaire: function($event){
+      fetch(
+        $event.uri,
+        {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          method: "PUT",
+          body: JSON.stringify({nom: $event.name})
+        })
+      .then(response => { console.log('Update Success:' + response); } )
+      .then(() => this.refreshItem())
+      .catch( response => { console.log(response);  });
     },
-    refreshItem: function () {
-      fetch('http://127.0.0.1:5000/quiz/api/v1.0/questionnaires')
-        .then(response => response.json())
-        .then(data => {
-          this.questionnaires = data;
-        });
+    refreshItem: function() {
+      let requete = "http://127.0.0.1:5000/quiz/api/v1.0/questionnaires";
+      fetch(requete)
+      .then(response => response.json())
+      .then( data => this.questionnaires = data)
+      .catch(error => console.log("Erreur : ", error));
     }
   },
   mounted() {
     this.refreshItem();
   },
   components: {
-    QuestionnaireItem
+    QuestionnaireItem,
+    FormQuestionnaire
   }
 };
 </script>
@@ -71,26 +80,12 @@ export default {
           <QuestionnaireItem
             v-for="questionnaire in questionnaires"
             :questionnaire="questionnaire"
-            @remove="removeItem"
-            @update="updateItem"
+            @remove="removeQuestionnaire"
+            @update="updateQuestionnaire"
           />
         </ol>
-        <div class="input-group">
-          <input
-            v-model="newItem"
-            @keyup.enter="addItem"
-            placeholder="Ajouter une tache à la liste"
-            type="text"
-            class="form-control"
-          >
-          <button
-            @click="addItem"
-            class="btn btn-light"
-            type="button"
-          >
-            Ajouter
-          </button>
-        </div>
+        <FormQuestionnaire
+        @refresh="refreshItem"/>
       </div>
 
       <!-- Div droite -->

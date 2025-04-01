@@ -10,10 +10,10 @@ export default {
   },
   methods: {
     suppr: function () {
-      this.$emit('remove', { id: this.questionnaire.id });
+      this.$emit('remove', { id: this.questionnaire.id, uri: this.questionnaire.uri });
     },
     valid: function () {
-      this.$emit('update', { id: this.questionnaire.id, name: this.questionnaire.name });
+      this.$emit('update', { id: this.questionnaire.id, name: this.questionnaire.name, uri: this.questionnaire.uri });
       this.isEditing = false;
     },
     modif: function () {
