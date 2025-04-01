@@ -1,7 +1,7 @@
 <script>
 export default {
   props: {
-    question: Object
+    question: Object,
   },
   data() {
     return {

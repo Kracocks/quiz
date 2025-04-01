@@ -1,60 +1,67 @@
 <script>
-
 import QuestionItem from './QuestionItem.vue';
+
 export default {
-    props: {
-  questionnaire: {
-    type: Object,
-    default: () => ({ name: '',
-      questions: []
-    })
-  }
-},
+  props: {
+    questionnaire: {
+      type: Object,
+      default: () => ({
+        name: '',
+        questions: []
+      })
+    }
+  },
   data() {
     return {
-        isEditQuestion: false,
-        newQuestions: '',
-        isAddingQuestion: false,
+      isEditQuestion: false,
+      newQuestions: '',
+      isAddingQuestion: false,
     };
   },
   methods: {
     add: function () {
-        fetch(
-            "http://127.0.0.1:5000/quiz/api/v1.0/questionnaires",
-            {
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                method: "POST",
-                body: JSON.stringify({"name": this.questionnaire.name, "questions":this.questionnaire.question})
-            }
-        )
-        .then(res => { 
-            console.log('Save Success') ;
-            this.$emit('refresh');
+      fetch(
+        "http://127.0.0.1:5000/quiz/api/v1.0/questionnaires",
+        {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          method: "POST",
+          body: JSON.stringify({ "name": this.questionnaire.name, "questions": this.questionnaire.question })
+        }
+      )
+        .then(res => {
+          console.log('Save Success');
+          this.$emit('refresh');
         })
-        .catch( res => { console.log(res) });
+        .catch(res => { console.log(res) });
     },
-        saveChanges() {
+    saveChanges() {
       this.$emit('update', { id: this.questionnaire.id, name: this.questionnaire.name, uri: this.questionnaire.uri, questions: this.questionnaire.question });
     },
     addQuestions: function () {
       let nameQ = this.newQuestions.trim();
       if (nameQ) {
         this.questionnaire.questions.push({
-          titre: this.nameQ,
+          title: this.nameQ,
           type: "simple_question"
         });
         this.newQuestions = '';
         this.isAddingQuestion = false;
-        console.log(this.questionnaire.questions[1].id);
+        this.refreshQuestion();
       }
     },
-    ajouteQuestion: function() {
+    ajouteQuestion: function () {
       this.isAddingQuestion = true;
+    },
+    refreshQuestion: function () {
+      let requete = "http://127.0.0.1:5000/quiz/api/v1.0/questionnaires/" + this.questionnaire.id + "/questions";
+      fetch(requete)
+        .then(response => response.json())
+        .then(data => this.questionnaires = data)
+        .catch(error => console.log("Erreur : ", error));
     }
-  
   },
   emits: ['refresh', 'update'],
   components: {
@@ -86,31 +93,32 @@ export default {
     </div>
     <div id="questions">
       <h2>Les questions</h2>
-        <ol>
-          <QuestionItem
-            v-for="question in questionnaire.questions"
-            :question="question"
-          />
-        </ol>
-
-
-      <button
-      @click="ajouteQuestion"
+      <ol>
+        <QuestionItem
+          v-for="question in questionnaire.questions"
+          :question="question"
+        />
+      </ol>
+      <div
+        v-if="isAddingQuestion"
+        id="ajoute-question"
       >
-      Ajouter une question
+        <input
+          v-model="newQuestions"
+          @keyup.enter="addQuestions"
+          placeholder="Ajouter une question"
+          class="btn btn-alert"
+          type="text"
+        >
+      </div>
+      <button
+        @click="ajouteQuestion"
+      >
+        Ajouter une question
       </button>
-      <div v-if="isAddingQuestion"
-      id="ajoute-question">
-      <input
-            v-model="newQuestions"
-            @keyup.enter="addQuestions"
-            placeholder="Ajouter une question"
-            class="btn btn-alert"
-            type="text"
-            >
-          </div>
     </div>
-    <div class="row">
+
+    <div class="pt-1 row">
       <div class="col-12 text-center">
         <button
           @click="saveChanges"
