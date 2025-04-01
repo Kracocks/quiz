@@ -77,6 +77,14 @@ export default {
       </label>
     </div>
 
+	<div class="afficheQuestion">
+		<p>{{ question.title }}</p>
+		<p>{{ question.proposition1 }}</p>
+		<p v-if="question.reponse">Bonne Réponse</p>
+		<p>{{ question.proposition2 }}</p>
+		<p v-if="!question.reponse">Bonne Réponse</p>
+	</div>
+
     <input
       type="button"
       class="btn btn-danger"
