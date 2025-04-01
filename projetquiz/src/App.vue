@@ -1,13 +1,11 @@
 <script>
-import TodoItem from './components/TodoItem.vue';
+import QuestionnaireItem from './components/QuestionnaireItem.vue';
+import FormQuestionnaire from './components/formQuestionnaire.vue';
 
 let data = {
-  todos: [
-    { id:0, text: 'Faire les courses', checked: true },
-    { id:1, text: 'Apprendre REST', checked: false }
-  ],
-  title: 'Mes tâches',
-  newItem: ''
+  questionnaires: {},
+  title: 'Mes questionnaires',
+  newItem: '',
 };
 
 export default {
@@ -16,41 +14,52 @@ export default {
   },
   methods: {
     addItem: function () {
-      let text = this.newItem.trim();
-      if (text) {
-        this.todos.push({
-          id: this.todos.length,
-          text: text,
-          checked: false
-        });
-        this.newItem = '';
-      }
+      this.refreshItem();
     },
-    removeItem: function ($event) {
 
-      for (let i = 0; i < this.todos.length; i++) {
-        if ($event.id == this.todos[i].id) {
-          this.todos.splice(i, 1);
-          break;
-        }
-      }
+    removeQuestionnaire: function ($event) {
+      fetch(
+        $event.uri,
+        {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          method: "DELETE"
+        })
+      .then(response => { console.log('Delete Success:' + response); } )
+      .then(() => this.refreshItem())
+      .catch( response => { console.log(response);  });
     },
-    updateItem: function($event){
-      for (let i = 0; i < this.todos.length; i++) {
-        if ($event.id == this.todos[i].id) {
-          this.todos[i].text = $event.text;
-          break;}
-    }}
+    updateQuestionnaire: function($event){
+      fetch(
+        $event.uri,
+        {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          method: "PUT",
+          body: JSON.stringify({nom: $event.name})
+        })
+      .then(response => { console.log('Update Success:' + response); } )
+      .then(() => this.refreshItem())
+      .catch( response => { console.log(response);  });
+    },
+    refreshItem: function() {
+      let requete = "http://127.0.0.1:5000/quiz/api/v1.0/questionnaires";
+      fetch(requete)
+      .then(response => response.json())
+      .then( data => this.questionnaires = data)
+      .catch(error => console.log("Erreur : ", error));
+    }
   },
   mounted() {
-    fetch('http://127.0.0.1:5000/todo/api/v1.0/tasks')
-      .then(response => response.json())
-      .then(data => {
-        this.todos = data.tasks;
-      });
+    this.refreshItem();
   },
   components: {
-    TodoItem
+    QuestionnaireItem,
+    FormQuestionnaire
   }
 };
 </script>
@@ -62,33 +71,27 @@ export default {
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
     crossorigin="anonymous"
   >
-  <div class="container">
-    <h2>{{ title }}</h2>
-    <ol>
-      <TodoItem
-      v-for="todo in todos"
-      :todo="todo"
-      @remove="removeItem"
-      @update="updateItem"
-      />
-    </ol>
-    <div class="input-group">
-      <input
-        v-model="newItem"
-        @keyup.enter="addItem"
-        placeholder="Ajouter une tache à la liste"
-        type="text"
-        class="form-control"
-      >
-      <span class="input-group-btn">
-        <button
-          @click="addItem"
-          class="btn btn-default"
-          type="button"
-        >
-          Ajouter
-        </button>
-      </span>
+  <div class="container-fluid w-100 vh-100 border border-dark">
+    <div class="row h-100">
+      <!-- Div gauche -->
+      <div id="gauche" class="col-6 text-white p-5 border-end border-dark" style="background-color: #60a7db;">
+        <h2>{{ title }}</h2>
+        <ol>
+          <QuestionnaireItem
+            v-for="questionnaire in questionnaires"
+            :questionnaire="questionnaire"
+            @remove="removeQuestionnaire"
+            @update="updateQuestionnaire"
+          />
+        </ol>
+        <FormQuestionnaire
+        @refresh="refreshItem"/>
+      </div>
+
+      <!-- Div droite -->
+      <div id="droite" class="col-6 text-white p-5 border-start border-dark" style="background-color: #9ce477;">
+        <!-- Contenu de la div droite -->
+      </div>
     </div>
   </div>
 </template>
