@@ -9,9 +9,6 @@ export default {
     };
   },
   methods: {
-    refresh: function () {
-        
-    },
     suppr: function () {
         fetch(
             this.question.uri,

@@ -38,7 +38,7 @@ export default {
         .catch(res => { console.log(res) });
     },
     saveChanges() {
-      this.$emit('update', { id: this.questionnaire.id, name: this.questionnaire.name, uri: this.questionnaire.uri, questions: this.questionnaire.question });
+      this.$emit('update', { id: this.questionnaire.id, name: this.questionnaire.name, uri: this.questionnaire.uri, questions: this.questionnaire.questions });
     },
     addQuestions: function () {
       let nameQ = this.newQuestions.trim();
