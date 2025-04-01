@@ -82,7 +82,7 @@ export default {
       this.isAffiche = false;
       this.selectedQuestionnaire = $event;
       this.isEdit = true;
-    }
+    },
   },
   mounted() {
     this.refreshItem();

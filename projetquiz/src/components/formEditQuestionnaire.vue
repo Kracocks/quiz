@@ -1,14 +1,20 @@
 <script>
+
+import QuestionItem from './QuestionItem.vue';
 export default {
     props: {
   questionnaire: {
     type: Object,
-    default: () => ({ name: '' })
+    default: () => ({ name: '',
+      questions: []
+    })
   }
 },
   data() {
     return {
         isEditQuestion: false,
+        newQuestions: '',
+        isAddingQuestion: false,
     };
   },
   methods: {
@@ -21,7 +27,7 @@ export default {
                     'Content-Type': 'application/json'
                 },
                 method: "POST",
-                body: JSON.stringify({"name": this.questionnaire.name})
+                body: JSON.stringify({"name": this.questionnaire.name, "questions":this.questionnaire.question})
             }
         )
         .then(res => { 
@@ -31,10 +37,29 @@ export default {
         .catch( res => { console.log(res) });
     },
         saveChanges() {
-      this.$emit('update', { id: this.questionnaire.id, name: this.questionnaire.name, uri: this.questionnaire.uri });
+      this.$emit('update', { id: this.questionnaire.id, name: this.questionnaire.name, uri: this.questionnaire.uri, questions: this.questionnaire.question });
+    },
+    addQuestions: function () {
+      let nameQ = this.newQuestions.trim();
+      if (nameQ) {
+        this.questionnaire.questions.push({
+          titre: this.nameQ,
+          type: "simple_question"
+        });
+        this.newQuestions = '';
+        this.isAddingQuestion = false;
+        console.log(this.questionnaire.questions[1].id);
+      }
+    },
+    ajouteQuestion: function() {
+      this.isAddingQuestion = true;
     }
+  
   },
-  emits: ['refresh', 'update']
+  emits: ['refresh', 'update'],
+  components: {
+    QuestionItem
+  }
 };
 </script>
 
@@ -58,6 +83,32 @@ export default {
           />
         </div>
       </div>
+    </div>
+    <div id="questions">
+      <h2>Les questions</h2>
+        <ol>
+          <QuestionItem
+            v-for="question in questionnaire.questions"
+            :question="question"
+          />
+        </ol>
+
+
+      <button
+      @click="ajouteQuestion"
+      >
+      Ajouter une question
+      </button>
+      <div v-if="isAddingQuestion"
+      id="ajoute-question">
+      <input
+            v-model="newQuestions"
+            @keyup.enter="addQuestions"
+            placeholder="Ajouter une question"
+            class="btn btn-alert"
+            type="text"
+            >
+          </div>
     </div>
     <div class="row">
       <div class="col-12 text-center">
