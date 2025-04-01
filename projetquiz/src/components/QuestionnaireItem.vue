@@ -12,25 +12,22 @@ export default {
     suppr: function () {
       this.$emit('remove', { id: this.questionnaire.id, uri: this.questionnaire.uri });
     },
-    valid: function () {
-      this.$emit('update', { id: this.questionnaire.id, name: this.questionnaire.name, uri: this.questionnaire.uri });
-      this.isEditing = false;
-    },
     modif: function () {
+      this.$emit('edit', this.questionnaire);
       this.isEditing = true;
     }
   },
-  emits: ['remove', 'update']
+  emits: ['remove', 'edit']
 };
 </script>
 
 <template>
   <li>
     <div class="questionnaire">
-      <label v-if="!isEditing">
+      <label>
         {{ questionnaire.name }}
       </label>
-      <input v-if="isEditing" v-model="questionnaire.name" class="form-control">
+      
     </div>
 
     <input
@@ -40,18 +37,10 @@ export default {
       @click="suppr"
     >
     <input
-      v-if="!isEditing"
       type="button"
       class="btn btn-"
       value="Modifier"
       @click="modif"
-    >
-    <input
-      v-if="isEditing"
-      type="button"
-      class="btn btn-"
-      value="Valider"
-      @click="valid"
     >
   </li>
 </template>
