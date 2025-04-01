@@ -77,7 +77,7 @@ export default {
       </label>
     </div>
 
-	<div class="afficheQuestion">
+	<div class="afficheQuestion" v-if="!isEditing">
 		<p>{{ question.title }}</p>
 		<p>{{ question.proposition1 }}</p>
 		<p v-if="question.reponse">Bonne Réponse</p>
