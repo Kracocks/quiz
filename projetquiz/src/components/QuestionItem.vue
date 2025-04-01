@@ -29,6 +29,7 @@ export default {
         .catch( res => { console.log(res);  });
     },
     valid: function () {
+      	console.log(this.question)
         fetch(
             this.question.uri, 
             {
@@ -38,7 +39,7 @@ export default {
                 },
                 method: "PUT",
                 body: JSON.stringify({
-                    "titre": this.question.titre,
+                    "titre": this.question.title ? this.question.title : "",
                     "proposition1": this.question.proposition1,
                     "proposition2": this.question.proposition2,
                     "reponse": this.question.reponse
@@ -62,7 +63,7 @@ export default {
   <li>
     <div class="formModifierQuestion" v-if="isEditing">
       <label>
-        <input type="text" v-model="question.titre">
+        <input type="text" v-model="question.title" placeholder="Nouveau nom de la question">
       </label>
 
       <input type="radio" id="reponse1" name="reponse" :value="true" v-model="question.reponse" />
