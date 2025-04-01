@@ -23,10 +23,11 @@ export default {
                 },
                 method: "DELETE"
             })
-        .then(res => { console.log('Delete Success:' + res); } )
-        .then(() => refreshQuestionnaireList())
+        .then(res => { 
+			console.log('Delete Success:' + res); 
+			this.$emit('remove', { return: res });
+		} )
         .catch( res => { console.log(res);  });
-        this.$emit('remove', { id: this.todo.id });
     },
     valid: function () {
         fetch(
@@ -38,34 +39,15 @@ export default {
                 },
                 method: "PUT",
                 body: JSON.stringify({
-                    "titre": titre,
-                    "reponse": reponse
+                    "titre": "titre",
+					"proposition1": "true",
+					"proposition2": "false",
+                    "reponse": "true"
                 })
             })
-        .then(res => { console.log('Save Success') ;
-            $("#result").text(res['contenu']) ;
-            refreshQuestionList(event.data.id_qaire)
-        })
-        .catch( res => { console.log(res) });
-        this.$emit('update', { id: this.todo.id, text: this.todo.text });
-        this.isEditing = false;
-    },
-    modifType: function(new_type) {
-        fetch(
-            uri, 
-            {
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                method: "PUT",
-                body: JSON.stringify({
-                    "type": new_type
-                })
-        })
-        .then(res => { console.log('Save Success') ;
-            $("#result").text(res['contenu']);
-            refreshQuestionList(event.data.id_qaire)
+        .then(() => { console.log('Save Success') ;
+            this.$emit('update', { return: res });
+            this.isEditing = false;
         })
         .catch( res => { console.log(res) });
     },
