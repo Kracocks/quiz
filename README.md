@@ -18,13 +18,10 @@ Allumer le serveur avec la commande
     `flask run`
 
 ### Accéder au site
-Ouvrez le fichier **questionnaire.html** se trouvant dans le dossier **js**
+Dans le terminal allez dans le dossier **projetquiz** puis faite les commandes
+    `npm install`
+    `npm run dev --host`
 
 ## Ce qui à été fait
-Globalement beaucoup de chose ont été faite comme l'héritage de la classe question. Il y a un crud sur toute les classes de la base de données
-Actuellement il y a seulement deux type de question : SimpleQuestion et OpenQuestion
 
 ## Ce qui n'a pas été fait
-Il y a un problème avec le changement de type de question du a la façon dont est fait cette dernière dans le views.py
-
-Il n'est pas possible de faire les questionnaire. On peut juste les modifier
