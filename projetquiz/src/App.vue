@@ -16,6 +16,7 @@ export default {
     addItem: function () {
       this.refreshItem();
     },
+
     removeQuestionnaire: function ($event) {
       fetch(
         $event.uri,
@@ -70,16 +71,27 @@ export default {
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
     crossorigin="anonymous"
   >
-  <div class="container">
-    <h2>{{ title }}</h2>
-    <ol>
-      <QuestionnaireItem
-      v-for="questionnaire in questionnaires"
-      :questionnaire="questionnaire"
-      @remove="removeQuestionnaire"
-      @update="updateQuestionnaire"/>
-    </ol>
-    <FormQuestionnaire
-    @refresh="refreshItem"/>
+  <div class="container-fluid w-100 vh-100 border border-dark">
+    <div class="row h-100">
+      <!-- Div gauche -->
+      <div id="gauche" class="col-6 text-white p-5 border-end border-dark" style="background-color: #60a7db;">
+        <h2>{{ title }}</h2>
+        <ol>
+          <QuestionnaireItem
+            v-for="questionnaire in questionnaires"
+            :questionnaire="questionnaire"
+            @remove="removeQuestionnaire"
+            @update="updateQuestionnaire"
+          />
+        </ol>
+        <FormQuestionnaire
+        @refresh="refreshItem"/>
+      </div>
+
+      <!-- Div droite -->
+      <div id="droite" class="col-6 text-white p-5 border-start border-dark" style="background-color: #9ce477;">
+        <!-- Contenu de la div droite -->
+      </div>
+    </div>
   </div>
 </template>
