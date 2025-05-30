@@ -1,2 +1,2 @@
-FLASK_APP=questionnaire
+FLASK_APP=server
 FLASK_DEBUG=1

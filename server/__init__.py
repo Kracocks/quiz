@@ -1,4 +1,4 @@
 from .app import app
-import questionnaire.views
-import questionnaire.models
-import questionnaire.commands
+import server.views
+import server.models
+import server.commands
