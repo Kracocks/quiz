@@ -1,7 +1,7 @@
 <script>
 export default {
   props: {
-    question: Object
+    question: Object,
   },
   data() {
     return {
@@ -9,9 +9,6 @@ export default {
     };
   },
   methods: {
-    refresh: function () {
-        
-    },
     suppr: function () {
         fetch(
             this.question.uri,

@@ -16,73 +16,78 @@ export default {
   data() {
     return data;
   },
-  methods: {  ajouteQuestionnairer: function(newQuestionnaire) {
-    fetch("http://127.0.0.1:5000/quiz/api/v1.0/questionnaires", {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      method: "POST",
-      body: JSON.stringify({ nom: newQuestionnaire.name })
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error("Erreur lors de l'ajout du questionnaire");
-      }
-      console.log('Add Success:', response);
-    })
-    .then(() => this.refreshItem())
-    .catch(error => {
-      console.log('Add Error:', error);
-    });
-  },
+  methods: {
+    ajouteQuestionnairer: function (newQuestionnaire) {
+      fetch("http://127.0.0.1:5000/quiz/api/v1.0/questionnaires", {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify({ nom: newQuestionnaire.name, questions: newQuestionnaire.questions })
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Erreur lors de l'ajout du questionnaire");
+          }
+          console.log('Add Success:', response);
+        })
+        .then(() => this.refreshItem())
+        .catch(error => {
+          console.log('Add Error:', error);
+        });
+    },
     removeQuestionnaire: function ($event) {
-      fetch(
-        $event.uri,
-        {
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          method: "DELETE"
+      fetch($event.uri, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: "DELETE"
+      })
+        .then(response => {
+          console.log('Delete Success:' + response);
         })
-      .then(response => { console.log('Delete Success:' + response); } )
-      .then(() => this.refreshItem())
-      .catch( response => { console.log(response);  });
+        .then(() => this.refreshItem())
+        .catch(response => {
+          console.log(response);
+        });
     },
-        updateQuestionnaire: function($event) {
-      fetch(
-        $event.uri,
-        {
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          method: "PUT",
-          body: JSON.stringify({ nom: $event.name })
+    updateQuestionnaire: function ($event) {
+      fetch($event.uri, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: "PUT",
+        body: JSON.stringify({ nom: $event.name})
+      })
+        .then(response => {
+          console.log('Update Success:', response);
         })
-      .then(response => { console.log('Update Success:', response); })
-      .then(() => this.refreshItem())
-      .catch(response => { console.log('Update Error:', response); });
+        .then(() => this.refreshItem())
+        .catch(response => {
+          console.log('Update Error:', response);
+        });
     },
-    refreshItem: function() {
+    refreshItem: function () {
       this.isAffiche = false;
       this.isEdit = false;
       let requete = "http://127.0.0.1:5000/quiz/api/v1.0/questionnaires";
       fetch(requete)
-      .then(response => response.json())
-      .then( data => this.questionnaires = data)
-      .catch(error => console.log("Erreur : ", error));
+        .then(response => response.json())
+        .then(data => this.questionnaires = data)
+        .catch(error => console.log("Erreur : ", error));
     },
-    addQuestionnaire: function() {
+    addQuestionnaire: function () {
       this.isEdit = false;
       this.isAffiche = true;
     },
-    editQuestionnaire: function($event){
+    editQuestionnaire: function ($event) {
       this.isAffiche = false;
       this.selectedQuestionnaire = $event;
       this.isEdit = true;
-    }
+    },
   },
   mounted() {
     this.refreshItem();
@@ -116,24 +121,25 @@ export default {
           />
         </ol>
         <button
-            @click="addQuestionnaire"
-            class="btn btn-default"
-            type="button">
-            Ajouter un questionnaire
+          @click="addQuestionnaire"
+          class="btn btn-default"
+          type="button">
+          Ajouter un questionnaire
         </button>
       </div>
 
       <div id="droite" class="col-6 text-white p-5 border-start border-dark" style="background-color: #9ce477;">
         <FormQuestionnaire
-        v-if="isAffiche"
-        @add="ajouteQuestionnairer"/>
+          v-if="isAffiche"
+          @add="ajouteQuestionnairer"
+        />
 
         <formEditQuestionnaire
-  v-if="isEdit"
-  :questionnaire="selectedQuestionnaire"
-  @refresh="refreshItem"
-  @update="updateQuestionnaire"
-/>
+          v-if="isEdit"
+          :questionnaire="selectedQuestionnaire"
+          @refresh="refreshItem"
+          @update="updateQuestionnaire"
+        />
       </div>
     </div>
   </div>
